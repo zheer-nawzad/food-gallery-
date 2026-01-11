@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گالەری خۆشخۆر | Xoshkhor Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --warm-cream: #F5E6D3;
+            --terracotta: #C4704E;
+            --deep-brown: #2C1810;
+            --gold: #D4A574;
+            --soft-orange: #E8976C;
+            --charcoal: #1A1A1A;
+            --overlay-dark: rgba(28, 17, 10, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans Arabic', 'Playfair Display', serif;
+            background: var(--charcoal);
+            color: var(--warm-cream);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(196, 112, 78, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
+                linear-gradient(180deg, var(--charcoal) 0%, #0D0907 100%);
+            z-index: -1;
+        }
+
+        header {
+            position: relative;
+            padding: 60px 20px 40px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header-decoration {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .logo {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--soft-orange) 50%, var(--terracotta) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: var(--gold);
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 3px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: rgba(245, 230, 211, 0.6);
+            margin-top: 15px;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .gallery-section {
+            padding: 40px 20px 80px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--warm-cream);
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: var(--terracotta);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            direction: ltr;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--deep-brown);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .gallery-item:nth-child(3n+1) { animation-delay: 0.1s; }
+        .gallery-item:nth-child(3n+2) { animation-delay: 0.2s; }
+        .gallery-item:nth-child(3n) { animation-delay: 0.3s; }
+
+        .gallery-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(196, 112, 78, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .item-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 60px 20px 20px;
+            background: linear-gradient(to top, var(--overlay-dark) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gallery-item:hover .item-overlay {
+            opacity: 1;
+        }
+
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--warm-cream);
+            text-align: center;
+            direction: rtl;
+        }
+
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            animation: zoomIn 0.4s ease;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-caption {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.3rem;
+            color: var(--gold);
+            direction: rtl;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            width: 45px;
+            height: 45px;
+            background: var(--terracotta);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            background: var(--soft-orange);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(196, 112, 78, 0.8);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-nav:hover {
+            background: var(--terracotta);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .lightbox-prev { left: -70px; }
+        .lightbox-next { right: -70px; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(212, 165, 116, 0.2);
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .footer-text {
+            color: rgba(245, 230, 211, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--gold);
+            color: var(--charcoal);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 40px;
+            direction: rtl;
+        }
+
+        .filter-btn {
+            padding: 10px 24px;
+            background: transparent;
+            border: 1px solid rgba(212, 165, 116, 0.4);
+            border-radius: 30px;
+            color: var(--warm-cream);
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--terracotta);
+            border-color: var(--terracotta);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .gallery-item img {
+                height: 200px;
+            }
+
+            .lightbox-nav {
+                width: 40px;
+                height: 40px;
+            }
+
+            .lightbox-prev { left: 10px; }
+            .lightbox-next { right: 10px; }
+
+            .filter-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-item img {
+                height: 250px;
+            }
+
+            header {
+                padding: 40px 15px 30px;
+            }
+        }
+
+        .photo-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(44, 24, 16, 0.9);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: var(--gold);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <header>
+        <div class="header-decoration"></div>
+        <div class="logo-container">
+            <h1 class="logo">خۆشخۆر</h1>
+        </div>
+        <p class="tagline">گالەری خواردنەکان</p>
+        <p class="subtitle">چێشتی کوردی ڕەسەن</p>
+    </header>
+
+    <main class="gallery-section">
+        <div class="section-header">
+            <h2 class="section-title">خواردنەکانمان</h2>
+        </div>
+
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">هەموو</button>
+            <button class="filter-btn" data-filter="chicken">مریشک</button>
+            <button class="filter-btn" data-filter="meat">گۆشت</button>
+            <button class="filter-btn" data-filter="rice">برنج</button>
+            <button class="filter-btn" data-filter="special">تایبەت</button>
+        </div>
+
+        <div class="gallery-grid" id="gallery"></div>
+    </main>
+
+    <div class="photo-counter">
+        <span id="photoCount">39</span> وێنە
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">×</button>
+            <button class="lightbox-nav lightbox-prev" onclick="prevImage()">‹</button>
+            <button class="lightbox-nav lightbox-next" onclick="nextImage()">›</button>
+            <img src="" alt="" id="lightbox-img">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">خۆشخۆر</div>
+        <p class="footer-text">چێشتی کوردی ڕەسەن لە سلێمانی</p>
+        <div class="social-links">
+            <a href="#" class="social-link">📍</a>
+            <a href="#" class="social-link">📞</a>
+            <a href="#" class="social-link">📷</a>
+        </div>
+    </footer>
+
+    <script>
+        const galleryData = [
+            { src: "images/photo1.jpg", name: "مریشکی خۆشخۆر و قەرەخەرمان", category: "chicken" },
+            { src: "images/photo2.jpg", name: "مریشکی سورەوەکراو", category: "chicken" },
+            { src: "images/photo3.jpg", name: "مریشکی ڕوبەهەنار و قەرەخەرمان", category: "chicken" },
+            { src: "images/photo4.jpg", name: "شێخ مەحشی", category: "special" },
+            { src: "images/photo5.jpg", name: "مریشکی خۆشخۆر قەرەخەرمان", category: "chicken" },
+            { src: "images/photo6.jpg", name: "بریانی خۆشخۆر", category: "rice" },
+            { src: "images/photo7.jpg", name: "برنجی سادە", category: "rice" },
+            { src: "images/photo8.jpg", name: "برنجی سادە", category: "rice" },
+            { src: "images/photo9.jpg", name: "ساوەری خۆشخۆر", category: "rice" },
+            { src: "images/photo10.jpg", name: "شفتە بە وەجبە", category: "special" },
+            { src: "images/photo11.jpg", name: "برنجی کوردی", category: "rice" },
+            { src: "images/photo12.jpg", name: "قاپی موشەکەل", category: "rice" },
+            { src: "images/photo13.jpg", name: "برنجی درێژ", category: "rice" },
+            { src: "images/photo14.jpg", name: "قۆزی", category: "meat" },
+            { src: "images/photo15.jpg", name: "قۆزی", category: "meat" },
+            { src: "images/photo16.jpg", name: "قۆزی ماینچە", category: "meat" },
+            { src: "images/photo17.jpg", name: "قۆزی و بریانی", category: "meat" },
+            { src: "images/photo18.jpg", name: "قۆزی و ساوەر", category: "meat" },
+            { src: "images/photo19.jpg", name: "قۆزی و قەرەخەرمان", category: "meat" },
+            { src: "images/photo20.jpg", name: "قەرەخەرمان و شلە", category: "rice" },
+            { src: "images/photo21.jpg", name: "قەلیە", category: "meat" },
+            { src: "images/photo22.jpg", name: "قەلیە", category: "meat" },
+            { src: "images/photo23.jpg", name: "قەلیە و بریانی", category: "meat" },
+            { src: "images/photo24.jpg", name: "قەلیە و ساوەر", category: "meat" },
+            { src: "images/photo25.jpg", name: "قەلیە و قەرەخەرمان", category: "meat" },
+            { src: "images/photo26.jpg", name: "ماینچە", category: "meat" },
+            { src: "images/photo27.jpg", name: "ماینچە", category: "meat" },
+            { src: "images/photo28.jpg", name: "ماینچە و بریانی", category: "meat" },
+            { src: "images/photo29.jpg", name: "ماینچە و ساوەر", category: "meat" },
+            { src: "images/photo30.jpg", name: "ماینچە و قەرەخەرمان", category: "meat" },
+            { src: "images/photo31.jpg", name: "مریشکی خۆشخۆر", category: "chicken" },
+            { src: "images/photo32.jpg", name: "مریشکی خۆشخۆر", category: "chicken" },
+            { src: "images/photo33.jpg", name: "مریشکی خۆشخۆر", category: "chicken" },
+            { src: "images/photo34.jpg", name: "مریشکی خۆشخۆر و بریانی", category: "chicken" },
+            { src: "images/photo35.jpg", name: "مریشکی ڕوبەهەنار", category: "chicken" },
+            { src: "images/photo36.jpg", name: "مریشکی فرن و برنجی کوردی", category: "chicken" },
+            { src: "images/photo37.jpg", name: "مریشکی ڕوبەهەنار", category: "chicken" },
+            { src: "images/photo38.jpg", name: "مریشکی ڕوبەهەنار و بریانی", category: "chicken" },
+            { src: "images/photo39.jpg", name: "شفتە", category: "special" }
+        ];
+
+        let currentIndex = 0;
+        let filteredData = [...galleryData];
+
+        function renderGallery(data) {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+            
+            data.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `
+                    <img src="${item.src}" alt="${item.name}" loading="lazy">
+                    <div class="item-overlay">
+                        <div class="item-name">${item.name}</div>
+                    </div>
+                `;
+                div.addEventListener('click', () => openLightbox(index));
+                gallery.appendChild(div);
+            });
+
+            document.getElementById('photoCount').textContent = data.length;
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.dataset.filter;
+                filteredData = filter === 'all' ? [...galleryData] : galleryData.filter(item => item.category === filter);
+                renderGallery(filteredData);
+            });
+        });
+
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function updateLightbox() {
+            const item = filteredData[currentIndex];
+            document.getElementById('lightbox-img').src = item.src;
+            document.getElementById('lightbox-caption').textContent = item.name;
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % filteredData.length;
+            updateLightbox();
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + filteredData.length) % filteredData.length;
+            updateLightbox();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') prevImage();
+            if (e.key === 'ArrowLeft') nextImage();
+        });
+
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') closeLightbox();
+        });
+
+        renderGallery(galleryData);
+    </script>
+</body>
+</html>
